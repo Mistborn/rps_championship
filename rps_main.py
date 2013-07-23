@@ -13,6 +13,10 @@ Data format:
 import sys
 import argparse
 import ai
+import random
+import importlib
+import pkgutil
+
 
 def determine_winner(throws):
 	"""Determine which player won, when passed a tuple of their respective moves."""
@@ -28,6 +32,11 @@ def determine_winner(throws):
 
 
 def play(player1, player2, total_rounds):
+	print("Pitting {p1} against {p2}, for a total of {total_rounds} rounds.".format(
+		p1= player1.__name__,
+		p2= player2.__name__,
+		total_rounds= total_rounds)
+		)
 	round_no = 1
 	moves = []
 	p1_points = 0
@@ -55,27 +64,27 @@ def play(player1, player2, total_rounds):
 				'p2_points': p2_points,
 				}
 
-		#if round_no % int(total_rounds/10) == 0:
+		if round_no % int(total_rounds/10) == 0:
 			# Print out the intermediate result every 10th of the way.
-		print("Round {round}: {p1_move} - {p2_move}. Score: {p1_points} - {p2_points}".format(**data))
+			print("Round {round}: {p1_move} - {p2_move}. Score: {p1_points} - {p2_points}".format(**data))
 
 		moves.append((p1_move, p2_move))
 		round_no += 1
 
 
 def main():
+	AIs_available = [module[1] for module in pkgutil.walk_packages(['ai'])]
 	parser = argparse.ArgumentParser(
 		description='Pit two rock-paper-scissors programs against each other.')
-	parser.add_argument('AIs', nargs=2)
-	parser.add_argument('--rounds', dest='total_rounds', type=int, default=100)
+	parser.add_argument('--player1', '--p1', choices=AIs_available, default=None)
+	parser.add_argument('--player2', '--p2', choices=AIs_available, default=None)
+	parser.add_argument('--rounds', '-r', dest='total_rounds', type=int, default=100,
+						help="Number of rounds to be played.")
 	args = parser.parse_args()
-	import ai.ai_weighted_random as player1
-	import ai.ai_beat_most_common as player2
+	player1 = importlib.import_module('ai.' + (args.player1 or random.choice(AIs_available)))
+	player2 = importlib.import_module('ai.' + (args.player2 or random.choice(AIs_available)))
 
 	play(player1, player2, args.total_rounds)
-
-
-
 
 
 if __name__ == '__main__':
