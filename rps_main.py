@@ -54,6 +54,9 @@ def play(player1, player2, total_rounds):
 				'p1_points': p1_points,
 				'p2_points': p2_points,
 				}
+
+		#if round_no % int(total_rounds/10) == 0:
+			# Print out the intermediate result every 10th of the way.
 		print("Round {round}: {p1_move} - {p2_move}. Score: {p1_points} - {p2_points}".format(**data))
 
 		moves.append((p1_move, p2_move))
@@ -67,7 +70,7 @@ def main():
 	parser.add_argument('--rounds', dest='total_rounds', type=int, default=100)
 	args = parser.parse_args()
 	import ai.ai_weighted_random as player1
-	import ai.ai_beat_last as player2
+	import ai.ai_beat_most_common as player2
 
 	play(player1, player2, args.total_rounds)
 
