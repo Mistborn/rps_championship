@@ -33,9 +33,9 @@ def determine_winner(throws):
 
 def play(player1, player2, total_rounds):
 	print("Pitting {p1} against {p2}, for a total of {total_rounds} rounds.".format(
-		p1= player1.__name__,
-		p2= player2.__name__,
-		total_rounds= total_rounds)
+		p1 = player1.__name__[3:],
+		p2 = player2.__name__[3:],
+		total_rounds = total_rounds)
 		)
 	round_no = 1
 	moves = []
@@ -48,8 +48,8 @@ def play(player1, player2, total_rounds):
 								'moves': moves})
 
 		# Make sure the AIs return a valid move
-		assert p1_move in ['r', 'p', 's'], 'Player 1 tried to make an invalid move.'
-		assert p2_move in ['r', 'p', 's'], 'Player 2 tried to make an invalid move.'
+		assert p1_move in ['r', 'p', 's'], "Player 1 tried to make an invalid move."
+		assert p2_move in ['r', 'p', 's'], "Player 2 tried to make an invalid move."
 
 		winner = determine_winner((p1_move, p2_move))
 		if winner == 1:
@@ -70,6 +70,8 @@ def play(player1, player2, total_rounds):
 
 		moves.append((p1_move, p2_move))
 		round_no += 1
+
+	return (p1_points, p2_points)
 
 
 def main():
