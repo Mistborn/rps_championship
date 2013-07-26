@@ -1,5 +1,6 @@
 """An AI that always throws whatever would defeat opponent's most common throw."""
 
+
 def move(data):
 	moves = data['moves']
 	player_number = data['player_number']

@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 
-def rps_tournament(list_of_AIs, rounds_per_match=1000):
+def run(list_of_AIs, rounds_per_match=1000):
 	"""Pit multiple RPS algorithms against each other in a round-robin
 	tournament."""
 

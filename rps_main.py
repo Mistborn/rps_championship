@@ -33,8 +33,8 @@ def determine_winner(throws):
 
 def play(player1, player2, total_rounds):
 	print("Pitting {p1} against {p2}, for a total of {total_rounds} rounds.".format(
-		p1 = player1.__name__[3:],
-		p2 = player2.__name__[3:],
+		p1 = player1.__name__,
+		p2 = player2.__name__,
 		total_rounds = total_rounds)
 		)
 	round_no = 1
