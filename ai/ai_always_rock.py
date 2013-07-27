@@ -1,4 +1,7 @@
 """An AI that always throws rock."""
 
-def move(data):
-	return 'r'
+class AI_always_rock:
+	"""An AI that always throws rock."""
+
+	def move(self, data):
+		return 'r'

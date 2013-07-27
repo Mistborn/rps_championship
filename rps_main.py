@@ -16,6 +16,7 @@ import ai
 import random
 import importlib
 import pkgutil
+import inspect
 
 
 def determine_winner(throws):
@@ -42,10 +43,12 @@ def play(player1, player2, total_rounds):
 	p1_points = 0
 	p2_points = 0
 	while round_no <= total_rounds:
-		p1_move = player1.move({'player_number': 1,
-								'moves': moves})
-		p2_move = player2.move({'player_number': 2,
-								'moves': moves})
+		p1_move = player1.move(player1,
+							   {'player_number': 1,
+							    'moves': moves})
+		p2_move = player2.move(player2,
+								{'player_number': 2,
+								 'moves': moves})
 
 		# Make sure the AIs return a valid move
 		assert p1_move in ['r', 'p', 's'], "Player 1 tried to make an invalid move."
@@ -83,8 +86,13 @@ def main():
 	parser.add_argument('--rounds', '-r', dest='total_rounds', type=int, default=100,
 						help="Number of rounds to be played.")
 	args = parser.parse_args()
-	player1 = importlib.import_module('ai.' + (args.player1 or random.choice(AIs_available)))
-	player2 = importlib.import_module('ai.' + (args.player2 or random.choice(AIs_available)))
+	module_1 = importlib.import_module('ai.' + (args.player1 or random.choice(AIs_available)))
+	module_2 = importlib.import_module('ai.' + (args.player2 or random.choice(AIs_available)))
+	player1 = inspect.getmembers(module_1, inspect.isclass)[-1][-1]
+	player2 = inspect.getmembers(module_2, inspect.isclass)[-1][-1]
+	#from ai.ai_random import 'AI_random' as player1
+	#from ai.ai_beat_last import AI_beat_last as player2
+
 
 	play(player1, player2, args.total_rounds)
 
