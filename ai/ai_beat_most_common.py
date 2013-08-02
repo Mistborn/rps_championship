@@ -4,6 +4,9 @@ from ai_templates.ai import AI
 
 class AI_beat_most_common(AI):
 
+	def __init__(self, name='ai_beat_most_common'):
+		self.__name__ = name
+
 	throw_occurences = {'r': 0,
 						 'p': 0,
 						 's': 0}

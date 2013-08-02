@@ -4,6 +4,9 @@ from ai_templates.ai import AI
 
 class AI_beat_last(AI):
 
+	def __init__(self, name='ai_beat_last'):
+		self.__name__ = name
+
 	def move(self, data):
 		if not data['moves']: # If this is the first turn.
 			import random

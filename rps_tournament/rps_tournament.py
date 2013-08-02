@@ -11,9 +11,9 @@ def run(list_of_AIs, rounds_per_match=1000):
 	stats = {}
 
 	for AI_index in range(len(list_of_AIs)):
-		# Need to keep track of the AIs by index rather than by object
-		# reference, because we can have the same AI playing in the tournament
-		# multiple times.
+		# Let's keep track of the AI's score in a separate dict rather than
+		# tacking on the data to the objects, so that we don't accidentally
+		# overwrite code that the AI itself is using to make decisions.
 		stats[AI_index] = {
 		'wins': 0,
 		'draws': 0,

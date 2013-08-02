@@ -7,7 +7,7 @@ against each other in a tournament."""
 def main():
 	import random
 	from copy import copy
-	from ai.ai_template import AI
+	from ai_templates.ai import AI
 	from rps_tournament import rps_tournament
 
 	list_of_AIs = []

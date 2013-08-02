@@ -5,6 +5,9 @@ from ai_templates.ai import AI
 class AI_random(AI):
 	"""An AI that throws a weighted random move."""
 
+	def __init__(self, name='ai_weighted_random'):
+		self.__name__ = name
+
 	def move(self, data):
 		import random
 		pick = random.random()
