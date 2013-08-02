@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 
 
 def run(list_of_AIs, rounds_per_match=1000):
@@ -11,9 +11,7 @@ def run(list_of_AIs, rounds_per_match=1000):
 	stats = {}
 
 	for AI_index in range(len(list_of_AIs)):
-		# Let's keep track of the AI's score in a separate dict rather than
-		# tacking on the data to the objects, so that we don't accidentally
-		# overwrite code that the AI itself is using to make decisions.
+		# Keep track of the AIs' scores.
 		stats[AI_index] = {
 		'wins': 0,
 		'draws': 0,
@@ -21,23 +19,26 @@ def run(list_of_AIs, rounds_per_match=1000):
 		}
 	
 
-	for first_AI in range(len(list_of_AIs)):
-		for second_AI in range(first_AI + 1, len(list_of_AIs)):
-			(p1_points, p2_points) = play(list_of_AIs[first_AI],
-										  list_of_AIs[second_AI],
+	for first_AI_index in range(len(list_of_AIs)):
+		for second_AI_index in range(first_AI_index + 1, len(list_of_AIs)):
+			# Pit two selected AIs against each other.
+			(p1_points, p2_points) = play(list_of_AIs[first_AI_index],
+										  list_of_AIs[second_AI_index],
 										  rounds_per_match)
 
+			# Update each AI's overall score.
 			if p1_points > p2_points:
-				stats[first_AI]['wins'] += 1
+				stats[first_AI_index]['wins'] += 1
 			elif p2_points > p1_points:
-				stats[second_AI]['wins'] += 1
+				stats[second_AI_index]['wins'] += 1
 			else:
-				stats[first_AI]['draws'] += 1
-				stats[second_AI]['draws'] += 1
+				stats[first_AI_index]['draws'] += 1
+				stats[second_AI_index]['draws'] += 1
 				
-			stats[first_AI]['partial_score'] += p1_points
-			stats[second_AI]['partial_score'] += p2_points
+			stats[first_AI_index]['partial_score'] += p1_points
+			stats[second_AI_index]['partial_score'] += p2_points
 
+	# Sort the AIs based on how well they did in the tournament.
 	sorted_indices = sorted(stats.keys(),
 						 key = lambda index: (
 						 	stats[index]['wins'],
@@ -45,6 +46,7 @@ def run(list_of_AIs, rounds_per_match=1000):
 						 	stats[index]['partial_score']),
 						 reverse  = True)
 
+	# Print out the final standings.
 	print("")
 	print("Final results:")
 	print("--------------")

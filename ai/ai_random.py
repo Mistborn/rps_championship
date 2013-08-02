@@ -1,13 +1,13 @@
-"""An AI that always throws a random move."""
+#! /usr/bin/env python3
 
 from ai_templates.ai import AI
+import random
 
-class AI_random(AI):
+class AIRandom(AI):
 	"""An AI that always throws a random move."""
 
 	def __init__(self, name='ai_random'):
 		self.__name__ = name
 	
 	def move(self, data):
-		import random
 		return random.choice(self.legal_moves)

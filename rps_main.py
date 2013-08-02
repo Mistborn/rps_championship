@@ -1,8 +1,8 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 
 """A program for pitting rock-paper-scissors programs against each other.
 
-Version 0.1
+Version 0.2
 
 Data format:
 {'player_number': player_number,
@@ -90,9 +90,9 @@ def main():
 	module_2 = importlib.import_module('ai.' + (args.player2 or random.choice(AIs_available)))
 	# Create an instance of each AI.
 	player1 = [cls[1] for cls in inspect.getmembers(module_1, inspect.isclass) if
-				 cls[0].startswith("AI_")][0]()
+				 cls[0].startswith("AI")][-1]()
 	player2 = [cls[1] for cls in inspect.getmembers(module_2, inspect.isclass) if
-				 cls[0].startswith("AI_")][0]()
+				 cls[0].startswith("AI")][-1]()
 	
 	play(player1, player2, args.total_rounds)
 

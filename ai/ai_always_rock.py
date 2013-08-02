@@ -1,9 +1,8 @@
-"""An AI that always throws rock."""
+#! /usr/bin/env python3
 
 from ai_templates.ai import AI
 
-
-class AI_always_rock(AI):
+class AIAlwaysRock(AI):
 	"""An AI that always throws rock."""
 
 	def __init__(self, name='ai_always_rock'):
