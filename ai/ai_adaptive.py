@@ -10,14 +10,12 @@ likely to throw next. Considers the following:
 
 import random
 from collections import defaultdict
-from ai_templates 
+from ai_templates.ai import AI
 
-class AI_apdaptive:
+class AI_apdaptive(AI):
 
 	def __init__(self, name='ai_adaptive'):
 		self.__name__ = name
-
-	round_number = 0
 
 	own_throws = {'r': 0,
 				  'p': 0,
@@ -27,27 +25,83 @@ class AI_apdaptive:
 				  'p': 0,
 				  's': 0}
 
-	beats = {'r': 'p', 'p': 's', 's': 'r'}
-
-	def defaultdict_int():
-		return defaultdict(int)
-
+	# Create a dict mapping each sequence of own 5 throws to what throw the
+	# opponent did next, how many times.
 	own_throws_mapping = defaultdict(lambda: defaultdict(int))
-	opp_throws_mapping = defaultdict(defaultdict_int)
-
+	# Same for the opponent's throws.
+	opp_throws_mapping = defaultdict(lambda: defaultdict(int))
 
 	def move(self, data):
+
+		def weighted_choice(choices):
+			"""When passed a dict assigning weight to each choice, it
+			chooses a weighted random choice."""
+			total = sum(weight for (choice, weight) in choices.items())
+			r = random.uniform(0, total)
+			upto = 0
+			for choice, weight in choices.items():
+				upto += weight
+				if upto > r:
+					return choice
+			assert False, "Shouldn't get here"
+
 		moves = data['moves']
 		player_number = data['player_number']
 		if moves:
-			own_throws[moves[player_number-1]] += 1
-			opp_throws[moves[-player_number]] += 1
+			# Add each player's moves to a running total.
+			self.own_throws[moves[-1][player_number-1]] += 1
+			self.opp_throws[moves[-1][-player_number]] += 1
 		if len(moves) < 6:
 			# Play randomly for the first six rounds
-			return random.choice['r','p','s']
+			return random.choice(['r','p','s'])
 		else:
-		
+			# Update the mappings of 5-sequences of moves to what opponent
+			# move followed them.
+			self.own_throws_mapping[tuple([move[player_number-1] for move in moves[-6:-1]])][moves[-1][-player_number]] += 1
+			self.opp_throws_mapping[tuple([move[-player_number] for move in moves[-6:-1]])][moves[-1][-player_number]] += 1
 
+			# Now let's add up all the weighted factors to pick our next move.
+			choices = {'r': 0, 'p': 0, 's': 0}
 
-		round_number +=1
+			# 1. Opponent's most common move (let's assume he's likely to make
+			# his most common move again.)
+			most_common_no = max(self.opp_throws.values())
+			most_common_throws = [throw for throw in self.opp_throws if
+									 self.opp_throws[throw] == most_common_no]
+			for throw in most_common_throws:
+				choices[self.beats[throw]] += 1/len(most_common_throws)
 
+			# 2. Our most common throw so far. Assume the opponent will try to
+			# beat it, and stay one step ahead of him.
+			most_common_no = max(self.own_throws.values())
+			most_common_throws = [throw for throw in self.own_throws if
+									 self.own_throws[throw] == most_common_no]
+			for throw in most_common_throws:
+				choices[self.beats[throw]] += 1/len(most_common_throws)
+			
+			# 3. Check the last 5 moves made by opponent. If he made the same 5
+			# moves at some point in the past, see what he followed it up with,
+			# and try to beat that.
+			last_5_opp_moves = tuple([move[-player_number] for move in moves[-5:]])
+			if last_5_opp_moves in self.opp_throws_mapping:
+				most_common_no = max(self.opp_throws_mapping[last_5_opp_moves].values())
+				most_common_throws = [throw for throw in self.opp_throws_mapping[last_5_opp_moves] if
+									  self.opp_throws_mapping[last_5_opp_moves][throw] == most_common_no]
+				for throw in most_common_throws:
+					choices[self.beats[throw]] += 1/len(most_common_throws)
+
+			# 4. Check the last 5 moves made by ourselves. If we made the same 5
+			# moves at some point in the past, see what the opponent followed up
+			# with, and try to beat that.
+			last_5_own_moves = tuple([move[player_number -1] for move in moves[-5:]])
+			if last_5_own_moves in self.own_throws_mapping:
+				most_common_no = max(self.own_throws_mapping[last_5_own_moves].values())
+				most_common_throws = [throw for throw in self.own_throws_mapping[last_5_own_moves] if
+									  self.own_throws_mapping[last_5_own_moves][throw] == most_common_no]
+				for throw in most_common_throws:
+					choices[self.beats[throw]] += 1/len(most_common_throws)
+
+			# And now let's choose!
+
+			return weighted_choice(choices)
+			

@@ -89,8 +89,10 @@ def main():
 	module_1 = importlib.import_module('ai.' + (args.player1 or random.choice(AIs_available)))
 	module_2 = importlib.import_module('ai.' + (args.player2 or random.choice(AIs_available)))
 	# Create an instance of each AI.
-	player1 = inspect.getmembers(module_1, inspect.isclass)[-1][-1]()
-	player2 = inspect.getmembers(module_2, inspect.isclass)[-1][-1]()
+	player1 = [cls[1] for cls in inspect.getmembers(module_1, inspect.isclass) if
+				 cls[0].startswith("AI_")][0]()
+	player2 = [cls[1] for cls in inspect.getmembers(module_2, inspect.isclass) if
+				 cls[0].startswith("AI_")][0]()
 	
 	play(player1, player2, args.total_rounds)
 
