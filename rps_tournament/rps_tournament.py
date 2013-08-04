@@ -60,3 +60,7 @@ def run(list_of_AIs, rounds_per_match=1000):
 			partial_score=stats[index]['partial_score']
 			))
 		place += 1
+
+	# Return the results in a script-friendly format.
+	stats['final_standings'] = sorted_indices
+	return stats
