@@ -46,6 +46,12 @@ class AIAdaptive2(AI):
 		# the weights of each move decision factor.
 		self.guesses = [[],[],[],[]]
 
+		# How much to change the weight of each factor upon success/failure
+		self.success_modifier = 1.1 # Successfully predicted opponent's exact move
+		self.partial_success_modifier = 1.04 # Partial success (guessed two possibilities)
+		self.failure_modifier = 0.9 # Wrong prediction
+
+
 
 	def move(self, data):
 
@@ -81,13 +87,13 @@ class AIAdaptive2(AI):
 					pass
 				# If the factor was wrong.
 				elif desired_move not in self.guesses[index]:
-					self.weights[index] *= 0.9
+					self.weights[index] *= self.failure_modifier
 				# If the factor guessed exactly the correct move
 				elif len(self.guesses[index]) == 1:
-					self.weights[index] *= 1.1
+					self.weights[index] *= self.success_modifier
 				# If the factor suggested two possibilities, one of them right.
 				elif len(self.guesses[index]) == 2:
-					self.weights[index] *= 1.04
+					self.weights[index] *= self.partial_success_modifier
 				else:
 					assert False, "Sanity check. Shouldn't get here."
 				# Clean up the guess for next turn.
