@@ -78,7 +78,7 @@ class AIAdaptive2(AI):
 			upto = 0
 			for choice, weight in choices.items():
 				upto += weight
-				if upto > r:
+				if upto >= r: 
 					return choice
 			assert False, "Shouldn't get here"
 
