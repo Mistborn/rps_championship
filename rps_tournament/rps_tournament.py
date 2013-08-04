@@ -25,6 +25,9 @@ def run(list_of_AIs, rounds_per_match=1000):
 			(p1_points, p2_points) = play(list_of_AIs[first_AI_index],
 										  list_of_AIs[second_AI_index],
 										  rounds_per_match)
+			# Reset the AIs' state for next round
+			list_of_AIs[first_AI_index].reset()
+			list_of_AIs[second_AI_index].reset()
 
 			# Update each AI's overall score.
 			if p1_points > p2_points:

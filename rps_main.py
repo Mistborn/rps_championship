@@ -2,7 +2,7 @@
 
 """A program for pitting rock-paper-scissors programs against each other.
 
-Version 0.2
+Version x # Doesn't make sense to put in version numbers yet.
 
 Data format:
 {'player_number': player_number,

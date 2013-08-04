@@ -17,6 +17,11 @@ class AI:
 		# Set the AI name (used by some of the playing scripts.)
 		self.__name__ = name
 
+
+	def reset(self):
+		"""Resets the AI state between individual games in a tournament."""
+		pass
+
 	def move(self, data):
 		"""A placeholder move function."""
 		return 'r'

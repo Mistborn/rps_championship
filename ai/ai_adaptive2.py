@@ -3,6 +3,7 @@
 import random
 from collections import defaultdict
 from ai_templates.ai import AI
+import copy
 
 
 class AIAdaptive2(AI):
@@ -30,6 +31,7 @@ class AIAdaptive2(AI):
 
 		# Initialize the weights for each of the move decision factors
 		self.weights = [1, 1, 1, 1]
+		self.original_weights = [1, 1, 1, 1] # For re-setting after each match
 
 		# Create a dict mapping each sequence of own 5 throws to what throw the
 		# opponent did next, how many times.
@@ -51,7 +53,19 @@ class AIAdaptive2(AI):
 		self.partial_success_modifier = 1.04 # Partial success (guessed two possibilities)
 		self.failure_modifier = 0.9 # Wrong prediction
 
+	def reset(self):
+		"""Resets the AI state between games in a tournament."""
 
+		self.weights = copy.copy(self.original_weights)
+		self.own_throws = {'r': 0,
+						  'p': 0,
+						  's': 0}
+
+		self.opp_throws = {'r': 0,
+						  'p': 0,
+						  's': 0}
+		self.own_throws_mapping = defaultdict(lambda: defaultdict(int))
+		self.opp_throws_mapping = defaultdict(lambda: defaultdict(int))
 
 	def move(self, data):
 
