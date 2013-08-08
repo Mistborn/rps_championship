@@ -32,17 +32,17 @@ def determine_winner(throws):
 		return 2 # Second player wins
 
 
-def play(player1, player2, total_rounds):
-	print("Pitting {p1} against {p2}, for a total of {total_rounds} rounds.".format(
+def play(player1, player2, rounds):
+	print("Pitting {p1} against {p2}, for a total of {rounds} rounds.".format(
 		p1 = player1.__name__,
 		p2 = player2.__name__,
-		total_rounds = total_rounds)
+		rounds = rounds)
 		)
 	round_no = 1
 	moves = []
 	p1_points = 0
 	p2_points = 0
-	while round_no <= total_rounds:
+	while round_no <= rounds:
 		p1_move = player1.move({'player_number': 1,
 							    'moves': moves})
 		p2_move = player2.move({'player_number': 2,
@@ -65,7 +65,7 @@ def play(player1, player2, total_rounds):
 				'p2_points': p2_points,
 				}
 
-		if round_no % int(total_rounds/10) == 0:
+		if round_no % int(rounds/10) == 0:
 			# Print out the intermediate result every 10th of the way.
 			print("Round {round}: {p1_move} - {p2_move}. Score: {p1_points} - {p2_points}".format(**data))
 
