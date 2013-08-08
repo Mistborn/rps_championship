@@ -27,7 +27,7 @@ class TestPlay(unittest.TestCase):
 	def test_play(self):
 		"""Make sure the play function tracks and returns results correctly."""
 		RockAI, PaperAI = self.DummyAI('r'), self.DummyAI('p')
-		result = rps_main.play(RockAI, PaperAI, rounds=58)
+		result = rps_main.play(RockAI, PaperAI, rounds=58, verbosity=0)
 
 		self.assertTrue(len(result) == 2, "Check that the result is a 2-tuple, \
 								or *some* kind of length 2 container, anyway.")

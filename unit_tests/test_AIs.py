@@ -20,8 +20,8 @@ class TestAIs(unittest.TestCase):
 
 		for AI_module in AIs_available:
 			module = importlib.import_module(name=AI_module)
-			cls.list_of_AIs.append([cls[1] for cls in inspect.getmembers(module, inspect.isclass) if
-							 cls[0].startswith("AI")][-1]())
+			cls.list_of_AIs.append([clss[1] for clss in inspect.getmembers(module, inspect.isclass) if
+							 clss[0].startswith("AI")][-1]())
 
 		assert len(cls.list_of_AIs) > 0, "Make sure we imported some AIs."
 

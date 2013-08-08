@@ -32,12 +32,21 @@ def determine_winner(throws):
 		return 2 # Second player wins
 
 
-def play(player1, player2, rounds):
-	print("Pitting {p1} against {p2}, for a total of {rounds} rounds.".format(
-		p1 = player1.__name__,
-		p2 = player2.__name__,
-		rounds = rounds)
-		)
+def play(player1, player2, rounds, verbosity=2):
+	"""Pit two algorithms against each other for the specified number of rounds.
+	Verbosity contros how much is printed to the console:
+	0 - Nothing
+	1 - Prints only result (with final score)
+	2 - Prints roughly 10 intermediate results, and the final result.
+	3 - Prints the throws and cumulative score each round. (Useful for debugging.)
+	"""
+
+	print_sub = {'p1_name': player1.__name__,
+			'p2_name': player2.__name__,
+			'rounds': rounds,}
+
+	if verbosity >= 2:
+		print("Pitting {p1_name} against {p2_name}, for a total of {rounds} rounds.".format(**print_sub))
 	round_no = 1
 	moves = []
 	p1_points = 0
@@ -58,19 +67,26 @@ def play(player1, player2, rounds):
 		elif winner == 2:
 			p2_points += 1
 
-		data = {'round': round_no,
-				'p1_move': p1_move,
-				'p2_move': p2_move,
-				'p1_points': p1_points,
-				'p2_points': p2_points,
-				}
+		print_sub['p1_move'] = p1_move
+		print_sub['p2_move'] = p2_move
+		print_sub['p1_points'] = p1_points
+		print_sub['p2_points'] = p2_points
+		print_sub['round'] = round_no
 
-		if round_no % int(rounds/10) == 0:
-			# Print out the intermediate result every 10th of the way.
-			print("Round {round}: {p1_move} - {p2_move}. Score: {p1_points} - {p2_points}".format(**data))
+		# Output to the console
+		if verbosity == 3:
+			print("Round {round}: {p1_move} - {p2_move}. Score: {p1_points} - {p2_points}".format(**print_sub))
+		elif verbosity == 2:
+			# Print intermediate result roughly 10 times during the matchup.
+			if round_no % int(rounds/10) == 0:
+				print("Round {round}: {p1_move} - {p2_move}. Score: {p1_points} - {p2_points}".format(**print_sub))
+
 
 		moves.append((p1_move, p2_move))
 		round_no += 1
+
+	if verbosity >= 1:
+		print("Result: {p1_name} {p1_points} - {p2_points} {p2_name}".format(**print_sub))
 
 	return (p1_points, p2_points)
 
@@ -82,8 +98,11 @@ def main():
 		description='Pit two rock-paper-scissors programs against each other.')
 	parser.add_argument('--player1', '--p1', choices=AIs_available, default=None)
 	parser.add_argument('--player2', '--p2', choices=AIs_available, default=None)
-	parser.add_argument('--rounds', '-r', dest='total_rounds', type=int, default=100,
+	parser.add_argument('--rounds', '-r', dest='rounds', type=int, default=100,
 						help="Number of rounds to be played.")
+	parser.add_argument('--verbosity', '-v', type=int, default=2, help="How much to output\
+					 to the console. 0 - Nothing, 1 - Only final result, 2 - Roughly 10\
+					 intermediate results, 3 - Intermediate result every roundself.")
 	args = parser.parse_args()
 	# Import the modules where the two AIs reside.
 	module_1 = importlib.import_module('ai.' + (args.player1 or random.choice(AIs_available)))
@@ -94,7 +113,7 @@ def main():
 	player2 = [cls[1] for cls in inspect.getmembers(module_2, inspect.isclass) if
 				 cls[0].startswith("AI")][-1]()
 	
-	play(player1, player2, args.total_rounds)
+	play(player1, player2, args.rounds, verbosity=args.verbosity)
 
 
 if __name__ == '__main__':

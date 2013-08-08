@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 
-def run(list_of_AIs, rounds_per_match=1000):
+def run(list_of_AIs, rounds=1000):
 	"""Pit multiple RPS algorithms against each other in a round-robin
 	tournament."""
 
@@ -24,7 +24,8 @@ def run(list_of_AIs, rounds_per_match=1000):
 			# Pit two selected AIs against each other.
 			(p1_points, p2_points) = play(list_of_AIs[first_AI_index],
 										  list_of_AIs[second_AI_index],
-										  rounds_per_match)
+										  rounds,
+										  verbosity=1)
 			# Reset the AIs' state for next round
 			list_of_AIs[first_AI_index].reset()
 			list_of_AIs[second_AI_index].reset()
